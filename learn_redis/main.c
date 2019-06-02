@@ -14,8 +14,7 @@
 int main(int argc, const char * argv[]) {
     //test sds sdsnewlen(const void* init, size_t initlen);
     const char* n = "Richard";
-    size_t len = strlen(n);
-    sds name = sdsnewlen(n, len);
+    sds name = sdsnewlen(n, strlen(n));
     printf("%s\n", name);
     
     

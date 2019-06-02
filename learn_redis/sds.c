@@ -34,3 +34,14 @@ sds sdsnewlen(const void* init, size_t initlen) {
     
     return (char*)sh->buf;
 }
+
+sds sdsnew(const char *init) {
+    int len = init == NULL ? 0 : (int)strlen(init);
+    return sdsnewlen(init, len);
+}
+
+sds sdsempty(void) {
+    return sdsnewlen("", 0);
+}
+
+
