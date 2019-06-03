@@ -9,6 +9,9 @@
 #ifndef sds_h
 #define sds_h
 
+
+#define SDS_MAX_PREALLOC (1024*1024)
+
 typedef char* sds;
 
 
@@ -46,12 +49,16 @@ size_t sdslen(const sds s);
 sds sdsdup(const sds s);
 void sdsfree(sds s);
 size_t sdsavail(const sds s);
+sds sdsgrowzero(sds s, size_t len);
 
 
 
 
-
-
+/* Low level functions exposed to the user API */
+sds sdsMakeRoomFor(sds s, size_t addlen);
+void sdsIncrLen(sds s, int incr);
+sds sdsRemoveFreeSpace(sds s);
+size_t sdsAllocSize(sds s);
 
 
 

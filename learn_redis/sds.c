@@ -57,3 +57,85 @@ void sdsfree(sds s) {
     free(sh);
 }
 
+sds sdsgrowzero(sds s, size_t len) {
+    struct sdshdr* sh = (void*)(s - sizeof(struct sdshdr));
+    size_t totlen, curlen = sh->len;
+    
+    if (len <= curlen) {
+        return s;
+    }
+    
+    s = sdsMakeRoomFor(s, len - curlen);
+    
+    if (s == NULL) {
+        return NULL;
+    }
+    
+    sh = (void*)(s - sizeof(struct sdshdr));
+    memset(s + curlen, 0, len - curlen + 1);
+    
+    totlen = sh->len + sh->free;
+    sh->len = (int)len;
+    sh->free = (int)(totlen-sh->len);
+                     
+    return s;
+}
+
+
+
+sds sdsMakeRoomFor(sds s, size_t addlen) {
+    struct sdshdr *sh, *newsh;
+    
+    size_t free = sdsavail(s);
+    
+    size_t len, newlen;
+    
+    if (free >= addlen) {
+        return s;
+    }
+    
+    len = sdslen(s);
+    sh = (void*) (s-(sizeof(struct sdshdr)));
+    
+    newlen = len + addlen;
+    
+    if (newlen < SDS_MAX_PREALLOC) {
+        newlen *= 2;
+    } else {
+        newlen += SDS_MAX_PREALLOC;
+    }
+    
+    newsh = realloc(sh, sizeof(struct sdshdr) + newlen + 1);
+    
+    if (newsh == NULL) {
+        return NULL;
+    }
+    
+    newsh->free = (int) (newlen - len);
+    
+    return newsh->buf;
+}
+
+
+
+
+
+
+
+
+
+
+                     
+                     
+        
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+    
