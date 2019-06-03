@@ -44,4 +44,16 @@ sds sdsempty(void) {
     return sdsnewlen("", 0);
 }
 
+//return duplicate
+sds sdsdup(const sds s) {
+    return sdsnewlen(s, sdslen(s));
+}
+
+void sdsfree(sds s) {
+    if (s == NULL) {
+        return;
+    }
+    struct sdshdr* sh = (void*)(s - sizeof(struct sdshdr));
+    free(sh);
+}
 
